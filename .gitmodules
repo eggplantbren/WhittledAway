@@ -1,0 +1,3 @@
+[submodule "InfoNest"]
+	path = InfoNest
+	url = https://github.com/eggplantbren/InfoNest
