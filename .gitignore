@@ -1,1 +1,8 @@
+# Binaries
 main
+
+# Output files
+latest_particles.txt
+output.txt
+run_data.txt
+
