@@ -12,12 +12,9 @@ namespace WhittledAway
 class MyModel
 {
     private:
+
         // Number of data points and so on
         static constexpr size_t N = 101;
-        static constexpr double t_min = 0.0;
-        static constexpr double t_max = 1.0;
-        static constexpr double t_range = t_max - t_min;
-        static constexpr double dt = t_range / (N - 1);
 
         // Noise sd
         static constexpr double sigma = 1.0;
@@ -39,7 +36,7 @@ class MyModel
         double logl;
 
         // Calculate log likelihood
-        void calculate_logl();
+        void calculate_logl(bool whittle=false);
 
         // Compute mu from the current parameter values
         void calculate_mu();

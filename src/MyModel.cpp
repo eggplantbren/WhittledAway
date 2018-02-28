@@ -13,18 +13,15 @@ MyModel::MyModel()
 {
     for(size_t i=0; i<N; ++i)
     {
-        // For evenly spaced points
-        t[i] = t_min + i * dt;
-
-        // For unevenly spaced points
-        // t[i] = t_min + pow((i + 0.5)/N, 3)*t_range;
+        // Evenly spaced points at integer times
+        t[i] = i;
     }
 }
 
 void MyModel::generate(InfoNest::RNG& rng)
 {
     A = exp(0.1*rng.randn());
-    log10_period = -rng.rand();
+    log10_period = log10(N) - rng.rand();
     phi = 2.0 * M_PI * rng.rand();
 
     calculate_mu();
@@ -61,7 +58,7 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     else if(which == 1)
     {
         log10_period += rng.randh();
-        InfoNest::wrap(log10_period, -1.0, 0.0);
+        InfoNest::wrap(log10_period, log10(N) - 1.0, log10(N));
     }
     else
     {
@@ -72,14 +69,23 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     return logH;
 }
 
-void MyModel::calculate_logl()
+void MyModel::calculate_logl(bool whittle)
 {
-    logl = 0.0;
-    double C = log(1.0 / sqrt(2.0 * M_PI) / sigma);
-    double tau = 1.0 / (sigma * sigma);
+    if(whittle)
+    {
+        // TODO: Implement Whittle likelihood
+        logl = 0.0;
+    }
+    else
+    {
+        // Exact likelihood in the time domain
+        logl = 0.0;
+        double C = log(1.0 / sqrt(2.0 * M_PI) / sigma);
+        double tau = 1.0 / (sigma * sigma);
 
-    for(size_t i=0; i<N; ++i)
-        logl += C - 0.5 * pow(y[i] - mu[i], 2) * tau;
+        for(size_t i=0; i<N; ++i)
+            logl += C - 0.5 * pow(y[i] - mu[i], 2) * tau;
+    }
 }
 
 double MyModel::perturb(InfoNest::RNG& rng)
