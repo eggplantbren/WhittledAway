@@ -2,6 +2,7 @@
 #define WhittledAway_MyModel_h
 
 // Includes
+#include <armadillo>
 #include <ostream>
 #include <vector>
 #include "RNG.h"
@@ -14,7 +15,7 @@ class MyModel
     private:
 
         // Number of data points and so on
-        static constexpr size_t N = 101;
+        static constexpr size_t N = 1000;
 
         // Noise sd
         static constexpr double sigma = 1.0;
@@ -29,7 +30,8 @@ class MyModel
         std::vector<double> mu;
 
         // The data
-        std::vector<double> y;
+        arma::vec y;
+        arma::cx_vec fft_of_y;
 
         // Log likelihood, i.e. ln p(y | params).
         // Only needed for one of the proposals

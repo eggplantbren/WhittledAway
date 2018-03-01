@@ -28,6 +28,7 @@ void MyModel::generate(InfoNest::RNG& rng)
 
     for(size_t i=0; i<N; ++i)
         y[i] = mu[i] + sigma*rng.randn();
+    fft_of_y = fft(y);
 
     calculate_logl();
 }
@@ -75,6 +76,14 @@ void MyModel::calculate_logl(bool whittle)
     {
         // TODO: Implement Whittle likelihood
         logl = 0.0;
+
+        double frequency, model_psd;
+        for(size_t k=0; k<N/2; ++k)
+        {
+            frequency = k/N;
+            model_psd = exp(-10*pow(frequency - 1.0/period, 2));
+            model_psd *= A;
+        }
     }
     else
     {
@@ -109,6 +118,7 @@ double MyModel::perturb(InfoNest::RNG& rng)
             y[i] = mu[i] + sigma * n;
         }
 
+        fft_of_y = fft(y);
         calculate_logl();
     }
     else if(proposal_type == 1)
@@ -133,6 +143,7 @@ double MyModel::perturb(InfoNest::RNG& rng)
         y[which] += sigma * rng.randh();
         logH += -0.5*pow((y[which] - mu[which])/sigma, 2);
 
+        fft_of_y = fft(y);
         calculate_logl();
     }
     else
@@ -146,6 +157,7 @@ double MyModel::perturb(InfoNest::RNG& rng)
             y[which] = mu[which] + sigma * rng.randn();
         }
 
+        fft_of_y = fft(y);
         calculate_logl();
     }
 
