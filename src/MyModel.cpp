@@ -114,7 +114,7 @@ void MyModel::calculate_logl(bool whittle)
             log_det += 2*log(Lmat(i, i));
 
         // Solve
-        logl += -0.5*y.dot(L.solve(y));
+        logl += -0.5*log_det - 0.5*y.dot(L.solve(y));
     }
 
     if(std::isnan(logl) || std::isinf(logl))
@@ -124,12 +124,8 @@ void MyModel::calculate_logl(bool whittle)
 double MyModel::perturb(InfoNest::RNG& rng)
 {
     double logH = -logl;
-
     logH += perturb_parameters(rng);
-    calculate_logl();
-
     logH += logl;
-
     return logH;
 }
 
