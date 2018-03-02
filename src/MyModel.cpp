@@ -58,7 +58,7 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     double logH = 0.0;
 
     // Perturb one of the three parameters
-    int which = rng.rand_int(2);
+    int which = rng.rand_int(3);
     if(which == 0)
     {
         A = log(A);
