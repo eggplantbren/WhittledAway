@@ -2,6 +2,7 @@
 #include "Utils.h"
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 namespace WhittledAway
 {
@@ -15,7 +16,7 @@ MyModel::MyModel()
 
 void MyModel::generate(InfoNest::RNG& rng)
 {
-    A = exp(rng.randn());
+    A = exp(0.1*rng.randn());
     log10_period = log10(N) - rng.rand();
     quality = exp(log(1.0) + log(1000.0)*rng.rand());
 
@@ -36,16 +37,17 @@ void MyModel::calculate_C()
     {
         for(size_t j=i; j<N; ++j)
         {
-            tau = i - j;
+            tau = std::abs(static_cast<double>(i) - static_cast<double>(j));
             C(i, j) = cos(eta*w0*tau) + sin(eta*w0*tau)/(2.0*eta*quality);
-            C(i, j) *= S0*w0*quality*exp(-w0/(2.0*quality)*tau);
+            C(i, j) *= S0*w0*quality*exp(-w0*tau/(2.0*quality));
 
-            if(i == j)
-                C(i, j) += sigma*sigma;
-            else
+            if(i != j)
                 C(j, i) = C(i, j);
         }
     }
+
+    for(size_t i=0; i<N; ++i)
+        C(i, i) += sigma*sigma;
 
     L = C.llt();
     Lmat = L.matrixL();
@@ -56,13 +58,13 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     double logH = 0.0;
 
     // Perturb one of the three parameters
-    int which = rng.rand_int(3);
+    int which = rng.rand_int(2);
     if(which == 0)
     {
         A = log(A);
-        logH -= -0.5*pow(A, 2);
-        A += rng.randh();
-        logH += -0.5*pow(A, 2);
+        logH -= -0.5*pow(A/0.1, 2);
+        A += 0.1*rng.randh();
+        logH += -0.5*pow(A/0.1, 2);
         A = exp(A);
     }
     else if(which == 1)

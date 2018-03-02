@@ -15,10 +15,10 @@ class MyModel
     private:
 
         // Number of data points and so on
-        static constexpr size_t N = 100;
+        static constexpr size_t N = 1001;
 
         // Noise sd
-        static constexpr double sigma = 1.0;
+        static constexpr double sigma = 0.1;
 
     private:
 
