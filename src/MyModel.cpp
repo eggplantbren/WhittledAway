@@ -16,7 +16,7 @@ MyModel::MyModel()
 
 void MyModel::generate(InfoNest::RNG& rng)
 {
-    A = exp(0.1*rng.randn());
+    A = exp(rng.randn());
     log10_period = log10(N) - rng.rand();
     quality = exp(log(1.0) + log(1000.0)*rng.rand());
 
@@ -62,9 +62,9 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     if(which == 0)
     {
         A = log(A);
-        logH -= -0.5*pow(A/0.1, 2);
-        A += 0.1*rng.randh();
-        logH += -0.5*pow(A/0.1, 2);
+        logH -= -0.5*pow(A/1.0, 2);
+        A += 1.0*rng.randh();
+        logH += -0.5*pow(A/1.0, 2);
         A = exp(A);
     }
     else if(which == 1)
