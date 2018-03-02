@@ -29,7 +29,8 @@ int main()
     // Do the run.
     InfoNest::execute<TheExample>(rng0, rng1, depth, num_reps, num_particles,
                                   mcmc_steps, dist_func,
-                                  InfoNest::Mode::conditional_entropy);
+                                  InfoNest::Mode::conditional_entropy,
+                                  10000);
 
     return 0;
 }
