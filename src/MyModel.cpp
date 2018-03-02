@@ -7,37 +7,48 @@ namespace WhittledAway
 {
 
 MyModel::MyModel()
-:t(N)
-,mu(N)
-,y(N)
+:y(N)
+,C(N, N)
 {
-    for(size_t i=0; i<N; ++i)
-    {
-        // Evenly spaced points at integer times
-        t[i] = i;
-    }
+
 }
 
 void MyModel::generate(InfoNest::RNG& rng)
 {
-    A = exp(0.1*rng.randn());
+    A = exp(rng.randn());
     log10_period = log10(N) - rng.rand();
-    phi = 2.0 * M_PI * rng.rand();
+    quality = exp(log(1.0) + log(1000.0)*rng.rand());
 
-    calculate_mu();
-
-    for(size_t i=0; i<N; ++i)
-        y[i] = mu[i] + sigma*rng.randn();
-    fft_of_y = fft(y);
-
+    calculate_C();
+    generate_data(rng);
     calculate_logl();
 }
 
-void MyModel::calculate_mu()
+void MyModel::calculate_C()
 {
-    double omega = 2*M_PI/pow(10.0, log10_period); // Angular frequency
+    // Fill covariance matrix
+    double w0 = 2*M_PI/pow(10.0, log10_period);
+    double eta = sqrt(std::abs(1.0 - 1.0/(4.0*quality*quality)));
+    double S0 = A/w0/quality;
+    double tau;
+
     for(size_t i=0; i<N; ++i)
-        mu[i] = A * sin(omega*t[i] + phi);
+    {
+        for(size_t j=i; j<N; ++j)
+        {
+            tau = i - j;
+            C(i, j) = cos(eta*w0*tau) + sin(eta*w0*tau)/(2.0*eta*quality);
+            C(i, j) *= S0*w0*quality*exp(-w0/(2.0*quality)*tau);
+
+            if(i == j)
+                C(i, j) += sigma*sigma;
+            else
+                C(j, i) = C(i, j);
+        }
+    }
+
+    L = C.llt();
+    Lmat = L.matrixL();
 }
 
 double MyModel::perturb_parameters(InfoNest::RNG& rng)
@@ -49,11 +60,9 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     if(which == 0)
     {
         A = log(A);
-
-        logH -= -0.5*pow(A/0.1, 2);
-        A += 0.1*rng.randh();
-        logH += -0.5*pow(A/0.1, 2);
-
+        logH -= -0.5*pow(A, 2);
+        A += rng.randh();
+        logH += -0.5*pow(A, 2);
         A = exp(A);
     }
     else if(which == 1)
@@ -63,11 +72,23 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     }
     else
     {
-        phi += 2 * M_PI * rng.randh();
-        InfoNest::wrap(phi, 0.0, 2 * M_PI);
+        quality = log(quality);
+        quality += log(1000.0)*rng.randh();
+        InfoNest::wrap(quality, log(1.0), log(1000.0));
+        quality = exp(quality);
     }
+    calculate_C();
+    calculate_logl();
 
     return logH;
+}
+
+void MyModel::generate_data(InfoNest::RNG& rng)
+{
+    Eigen::VectorXd n(N);
+    for(size_t i=0; i<N; ++i)
+        n(i) = rng.randn();
+    y = Lmat*n;
 }
 
 void MyModel::calculate_logl(bool whittle)
@@ -77,98 +98,44 @@ void MyModel::calculate_logl(bool whittle)
         // TODO: Implement Whittle likelihood
         logl = 0.0;
 
-        double frequency, model_psd;
-        for(size_t k=0; k<N/2; ++k)
-        {
-            frequency = k/N;
-            model_psd = exp(-10*pow(frequency - 1.0/period, 2));
-            model_psd *= A;
-        }
     }
     else
     {
         // Exact likelihood in the time domain
         logl = 0.0;
-        double C = log(1.0 / sqrt(2.0 * M_PI) / sigma);
-        double tau = 1.0 / (sigma * sigma);
 
+        logl += -0.5*log(2*M_PI)*N;
+
+        // Log determinant
+        double log_det = 0.0;
         for(size_t i=0; i<N; ++i)
-            logl += C - 0.5 * pow(y[i] - mu[i], 2) * tau;
+            log_det += 2*log(Lmat(i, i));
+
+        // Solve
+        logl += -0.5*y.dot(L.solve(y));
     }
+
+    if(std::isnan(logl) || std::isinf(logl))
+        logl = -1E300;
 }
 
 double MyModel::perturb(InfoNest::RNG& rng)
 {
-    double logH = 0.0;
+    double logH = -logl;
 
-    int proposal_type = 1;//rng.rand_int(4);
+    logH += perturb_parameters(rng);
+    calculate_logl();
 
-    if(proposal_type == 0)
-    {
-        // Perturb parameters, changing data along with it
-        std::vector<double> mu_old = mu;
-
-        logH += perturb_parameters(rng);
-        calculate_mu();
-
-        double n;
-        for(size_t i=0; i<N; ++i)
-        {
-            n = (y[i] - mu_old[i]) / sigma;
-            y[i] = mu[i] + sigma * n;
-        }
-
-        fft_of_y = fft(y);
-        calculate_logl();
-    }
-    else if(proposal_type == 1)
-    {
-        // Perturb parameters, keeping data constant
-        // (aka Metropolis step of the posterior!)
-        logH -= logl;
-
-        logH += perturb_parameters(rng);
-
-        calculate_mu();
-        calculate_logl();
-
-        logH += logl;        
-    }
-    else if(proposal_type == 2)
-    {
-        // Just change one datum
-        int which = rng.rand_int(N);
-
-        logH -= -0.5*pow((y[which] - mu[which])/sigma, 2);
-        y[which] += sigma * rng.randh();
-        logH += -0.5*pow((y[which] - mu[which])/sigma, 2);
-
-        fft_of_y = fft(y);
-        calculate_logl();
-    }
-    else
-    {
-        // Potentially regenerate many of the data points
-        int reps = pow(N, rng.rand());
-        int which;
-        for(int i=0; i<reps; ++i)
-        {
-            which = rng.rand_int(N);
-            y[which] = mu[which] + sigma * rng.randn();
-        }
-
-        fft_of_y = fft(y);
-        calculate_logl();
-    }
+    logH += logl;
 
     return logH;
 }
 
 void MyModel::print(std::ostream& out) const
 {
-    out<<A<<' '<<log10_period<<' '<<phi<<' ';
-    for(double yy: y)
-        out<<yy<<' ';
+    out<<A<<' '<<log10_period<<' '<<quality<<' ';
+    for(size_t i=0; i<N; ++i)
+        out << y[i] << ' ';
 }
 
 double MyModel::parameter_distance(const MyModel& s1, const MyModel& s2)
