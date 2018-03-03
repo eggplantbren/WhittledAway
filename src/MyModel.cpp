@@ -129,15 +129,11 @@ void MyModel::calculate_logl()
             model_psd += sigma*sigma;
 
             // Data PSD
-            data_psd = 0.5*(pow(y_fft[j].real(), 2) +
-                                    pow(y_fft[j].imag(), 2));
+            data_psd = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2));
 
             // Whittle
-            logl += -log(model_psd) - 0.5*data_psd/model_psd;
-
-            //std::cout << w << ' ' << model_psd << ' ' << data_psd << std::endl;
+            logl += -log(model_psd) - data_psd/model_psd;
         }
-        //exit(0);
     }
     else
     {
