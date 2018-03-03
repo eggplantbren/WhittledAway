@@ -2,6 +2,7 @@
 #define WhittledAway_MyModel_h
 
 // Includes
+#include <armadillo>
 #include <Eigen/Dense>
 #include <ostream>
 #include <vector>
@@ -20,13 +21,17 @@ class MyModel
         // Noise sd
         static constexpr double sigma = 1.0;
 
+        // Whittle likelihood?
+        static constexpr bool whittle = true;
+
     private:
 
         // Amplitude, log-period, and quality
         double A, log10_period, quality;
 
-        // Data
+        // Data in an Eigen vector and an Armadillo vector
         Eigen::VectorXd y;
+        arma::cx_vec y_fft;
 
         // Covariance matrix and its Cholesky decomposition
         Eigen::MatrixXd C;
@@ -40,7 +45,7 @@ class MyModel
         // Calculate log likelihood
         void calculate_C();
         void generate_data(InfoNest::RNG& rng);
-        void calculate_logl(bool whittle=false);
+        void calculate_logl();
 
         // Helper for perturb
         double perturb_parameters(InfoNest::RNG& rng);

@@ -5,6 +5,6 @@ default:
 	make -C InfoNest/cpp
 	$(CC) $(CCFLAGS) -c src/MyModel.cpp
 	$(CC) $(CCFLAGS) -c src/main.cpp
-	$(CC) -L InfoNest/cpp -o main *.o -linfonest
+	$(CC) -L InfoNest/cpp -o main *.o -larmadillo -linfonest
 	rm -f *.o
 

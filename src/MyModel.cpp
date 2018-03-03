@@ -2,6 +2,7 @@
 #include "Utils.h"
 #include <cmath>
 #include <algorithm>
+#include <armadillo>
 #include <iostream>
 
 namespace WhittledAway
@@ -9,6 +10,7 @@ namespace WhittledAway
 
 MyModel::MyModel()
 :y(N)
+,y_fft(N)
 ,C(N, N)
 {
 
@@ -20,7 +22,6 @@ void MyModel::generate(InfoNest::RNG& rng)
     log10_period = log10(N) - rng.rand();
     quality = exp(log(1.0) + log(1000.0)*rng.rand());
 
-    calculate_C();
     generate_data(rng);
     calculate_logl();
 }
@@ -79,7 +80,9 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
         InfoNest::wrap(quality, log(1.0), log(1000.0));
         quality = exp(quality);
     }
-    calculate_C();
+
+    if(!whittle)
+        calculate_C();
     calculate_logl();
 
     return logH;
@@ -87,19 +90,47 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
 
 void MyModel::generate_data(InfoNest::RNG& rng)
 {
+    calculate_C();
+
     Eigen::VectorXd n(N);
     for(size_t i=0; i<N; ++i)
         n(i) = rng.randn();
     y = Lmat*n;
+
+    // Copy into the Armadillo vector
+    for(size_t i=0; i<N; ++i)
+        y_fft[i] = y[i];
+
+    // Take the fft
+    y_fft = arma::fft(y_fft);
 }
 
-void MyModel::calculate_logl(bool whittle)
+void MyModel::calculate_logl()
 {
     if(whittle)
     {
-        // TODO: Implement Whittle likelihood
         logl = 0.0;
 
+        double model_psd, data_psd, w;
+        double w0 = 2*M_PI/pow(10.0, log10_period);
+        double S0 = A/w0/quality;
+        double coeff = sqrt(2.0/M_PI)*S0*pow(w0, 4);
+
+        // Loop over first half of fft plus one element
+        for(size_t j=0; j<N/2+1; ++j)
+        {
+            // Model PSD (Celerite paper, Eqn 20)
+            w = 2*M_PI*static_cast<double>(j) / N;
+            model_psd = coeff/(pow(w*w - w0*w0, 2)
+                                        + w0*w0*w*w/(quality*quality));
+
+            // Data PSD
+            data_psd = pow(y_fft[j].real(), 2) +
+                       pow(y_fft[j].imag(), 2);
+
+            // Whittle
+            logl += -log(model_psd) - data_psd/(N/2*model_psd);
+        }
     }
     else
     {
