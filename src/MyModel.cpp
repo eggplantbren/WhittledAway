@@ -102,35 +102,42 @@ void MyModel::generate_data(InfoNest::RNG& rng)
         y_fft[i] = y[i];
 
     // Take the fft
-    y_fft = arma::fft(y_fft);
+    y_fft = arma::fft(y_fft)/sqrt(N);
 }
 
 void MyModel::calculate_logl()
 {
     if(whittle)
     {
+
+        // https://www4.stat.ncsu.edu/~reich/SpatialStats/code/Whittle.html
         logl = 0.0;
 
-        double model_psd, data_psd, w;
+        double model_psd, data_psd, f, w;
         double w0 = 2*M_PI/pow(10.0, log10_period);
         double S0 = A/w0/quality;
         double coeff = sqrt(2.0/M_PI)*S0*pow(w0, 4);
 
-        // Loop over first half of fft plus one element
-        for(size_t j=0; j<N/2+1; ++j)
+        // Loop over first half of fft
+        for(size_t j=0; j<N/2; ++j)
         {
             // Model PSD (Celerite paper, Eqn 20)
-            w = 2*M_PI*static_cast<double>(j) / N;
+            f = static_cast<double>(j) / N;
+            w = 2*M_PI*f;
             model_psd = coeff/(pow(w*w - w0*w0, 2)
                                         + w0*w0*w*w/(quality*quality));
+            model_psd += sigma*sigma;
 
             // Data PSD
-            data_psd = pow(y_fft[j].real(), 2) +
-                       pow(y_fft[j].imag(), 2);
+            data_psd = 0.5*(pow(y_fft[j].real(), 2) +
+                                    pow(y_fft[j].imag(), 2));
 
             // Whittle
-            logl += -log(model_psd) - data_psd/(N/2*model_psd);
+            logl += -log(model_psd) - 0.5*data_psd/model_psd;
+
+            //std::cout << w << ' ' << model_psd << ' ' << data_psd << std::endl;
         }
+        //exit(0);
     }
     else
     {
