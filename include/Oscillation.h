@@ -1,5 +1,5 @@
-#ifndef WhittledAway_MyModel_h
-#define WhittledAway_MyModel_h
+#ifndef WhittledAway_Oscillation_h
+#define WhittledAway_Oscillation_h
 
 // Includes
 #include <armadillo>
@@ -11,7 +11,7 @@
 namespace WhittledAway
 {
 
-class MyModel
+class Oscillation
 {
     private:
 
@@ -22,7 +22,7 @@ class MyModel
         static constexpr double sigma = 1.0;
 
         // Whittle likelihood?
-        static constexpr bool whittle = true;
+        static constexpr bool whittle = false;
 
     private:
 
@@ -52,7 +52,7 @@ class MyModel
 
     public:
         // Do-nothing constructor
-        MyModel();
+        Oscillation();
 
         // Generate from the distribution
         void generate(InfoNest::RNG& rng);
@@ -66,7 +66,7 @@ class MyModel
     public:
         // A few options to use for `distance`
         static double parameter_distance
-                            (const MyModel& s1, const MyModel& s2);
+                            (const Oscillation& s1, const Oscillation& s2);
 
 };
 

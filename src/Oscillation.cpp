@@ -1,4 +1,4 @@
-#include "MyModel.h"
+#include "Oscillation.h"
 #include "Utils.h"
 #include <cmath>
 #include <algorithm>
@@ -8,7 +8,7 @@
 namespace WhittledAway
 {
 
-MyModel::MyModel()
+Oscillation::Oscillation()
 :y(N)
 ,y_fft(N)
 ,C(N, N)
@@ -16,7 +16,7 @@ MyModel::MyModel()
 
 }
 
-void MyModel::generate(InfoNest::RNG& rng)
+void Oscillation::generate(InfoNest::RNG& rng)
 {
     A = exp(rng.randn());
     log10_period = log10(N) - rng.rand();
@@ -26,7 +26,7 @@ void MyModel::generate(InfoNest::RNG& rng)
     calculate_logl();
 }
 
-void MyModel::calculate_C()
+void Oscillation::calculate_C()
 {
     // Fill covariance matrix
     double w0 = 2*M_PI/pow(10.0, log10_period);
@@ -54,7 +54,7 @@ void MyModel::calculate_C()
     Lmat = L.matrixL();
 }
 
-double MyModel::perturb_parameters(InfoNest::RNG& rng)
+double Oscillation::perturb_parameters(InfoNest::RNG& rng)
 {
     double logH = 0.0;
 
@@ -88,7 +88,7 @@ double MyModel::perturb_parameters(InfoNest::RNG& rng)
     return logH;
 }
 
-void MyModel::generate_data(InfoNest::RNG& rng)
+void Oscillation::generate_data(InfoNest::RNG& rng)
 {
     calculate_C();
 
@@ -105,7 +105,7 @@ void MyModel::generate_data(InfoNest::RNG& rng)
     y_fft = arma::fft(y_fft)/sqrt(N);
 }
 
-void MyModel::calculate_logl()
+void Oscillation::calculate_logl()
 {
     if(whittle)
     {
@@ -155,7 +155,7 @@ void MyModel::calculate_logl()
         logl = -1E300;
 }
 
-double MyModel::perturb(InfoNest::RNG& rng)
+double Oscillation::perturb(InfoNest::RNG& rng)
 {
     double logH = -logl;
     logH += perturb_parameters(rng);
@@ -163,14 +163,14 @@ double MyModel::perturb(InfoNest::RNG& rng)
     return logH;
 }
 
-void MyModel::print(std::ostream& out) const
+void Oscillation::print(std::ostream& out) const
 {
     out<<A<<' '<<log10_period<<' '<<quality<<' ';
     for(size_t i=0; i<N; ++i)
         out << y[i] << ' ';
 }
 
-double MyModel::parameter_distance(const MyModel& s1, const MyModel& s2)
+double Oscillation::parameter_distance(const Oscillation& s1, const Oscillation& s2)
 {
     return std::abs(s2.log10_period - s1.log10_period);
 }

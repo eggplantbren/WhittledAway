@@ -3,14 +3,14 @@
 #include <ctime>
 #include "Execute.hpp"
 #include "RNG.h"
-#include "MyModel.h"
+#include "Oscillation.h"
 
 // MAIN
 int main()
 {
     // What example are we using? The class and the distance function.
-    typedef WhittledAway::MyModel TheExample;
-    const auto& dist_func = TheExample::parameter_distance;
+    using TheModel = WhittledAway::Oscillation;
+    const auto& dist_func = TheModel::parameter_distance;
 
     // Create random number generators
     // The first one is used to generate reference points
@@ -27,10 +27,10 @@ int main()
     constexpr size_t mcmc_steps    = 1000;
 
     // Do the run.
-    InfoNest::execute<TheExample>(rng0, rng1, depth, num_reps, num_particles,
-                                  mcmc_steps, dist_func,
-                                  InfoNest::Mode::conditional_entropy,
-                                  10000);
+    InfoNest::execute<TheModel>(rng0, rng1, depth, num_reps, num_particles,
+                                mcmc_steps, dist_func,
+                                InfoNest::Mode::conditional_entropy,
+                                10000);
 
     return 0;
 }
