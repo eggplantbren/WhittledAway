@@ -42,6 +42,12 @@ class Model
         virtual void calculate_logl() = 0;
         virtual double perturb_parameters(InfoNest::RNG& rng) = 0;
 
+        // Generate from the distribution
+        virtual void generate(InfoNest::RNG& rng) = 0;
+
+        // Printing to stream
+        virtual void print(std::ostream& out) const = 0;
+
     public:
 
         // Constructor just sets up vectors and matrices to the
