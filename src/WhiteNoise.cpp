@@ -98,7 +98,7 @@ void WhiteNoise::print(std::ostream& out) const
     for(size_t i=0; i<N; ++i)
         out << y[i] << ' ';
 }
-9.60 +- 0.15
+
 double WhiteNoise::parameter_distance(const WhiteNoise& s1, const WhiteNoise& s2)
 {
     return std::abs(log(s2.sigma) - log(s1.sigma));
