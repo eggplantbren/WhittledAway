@@ -6,3 +6,8 @@ latest_particles.txt
 output.txt
 run_data.txt
 
+# LaTeX stuff
+doc/ms.aux
+doc/ms.log
+doc/ms.pdf
+
