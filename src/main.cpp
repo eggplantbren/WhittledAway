@@ -1,6 +1,7 @@
 // Includes
-#include <iostream>
 #include <ctime>
+#include <iostream>
+#include <type_traits>
 #include "Execute.hpp"
 #include "RNG.h"
 #include "Oscillation.h"
@@ -10,6 +11,11 @@ int main()
 {
     // What example are we using? The class and the distance function.
     using TheModel = WhittledAway::Oscillation;
+
+    // Make sure TheModel is derived from WhittledAway::Model
+    static_assert(std::is_base_of<WhittledAway::Model, TheModel>::value,
+                    "Examples must derive from WhittledAway::Model.");
+
     const auto& dist_func = TheModel::parameter_distance;
 
     // Create random number generators
