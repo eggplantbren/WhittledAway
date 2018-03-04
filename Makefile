@@ -5,6 +5,7 @@ default:
 	make -C InfoNest/cpp
 	$(CC) $(CCFLAGS) -c src/Model.cpp
 	$(CC) $(CCFLAGS) -c src/Oscillation.cpp
+	$(CC) $(CCFLAGS) -c src/WhiteNoise.cpp
 	$(CC) $(CCFLAGS) -c src/main.cpp
 	$(CC) -L InfoNest/cpp -o main *.o -larmadillo -linfonest
 	rm -f *.o
