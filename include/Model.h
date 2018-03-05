@@ -35,7 +35,8 @@ class Model
         Eigen::LLT<Eigen::MatrixXd> L;
         Eigen::MatrixXd Lmat;
 
-        void generate_data(InfoNest::RNG& rng);
+        // In special cases, an override might help
+        virtual void generate_data(InfoNest::RNG& rng);
 
         // Member functions required
         virtual void calculate_C() = 0;
