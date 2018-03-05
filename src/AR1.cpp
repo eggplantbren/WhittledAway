@@ -70,7 +70,7 @@ void AR1::calculate_logl()
     {
         logl = 0.0;
 
-        double model_psd, data_psd, f, w;
+        double model_psd, data_psd, f;
         double alpha = exp(-1.0/L);
         double sigma = beta/sqrt(1.0 - alpha*alpha);
 
