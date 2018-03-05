@@ -67,7 +67,6 @@ the product of an oscillation and an exponential decay:
 C(\tau) &= A\exp\left(-\frac{\omega_0\tau}{2Q}\right)\cos(\omega_0\tau)
 \end{align}
 which was the form assumed by \citet{brewer_stello}.
-
 The power spectral density corresponding to
 Equation~\ref{eqn:oscillation_covariance} is
 \begin{align}
@@ -83,6 +82,27 @@ $T$ by
 \begin{align}
 T &= \frac{2\pi}{\omega_0}.
 \end{align}
+In this section we assume that it is the log-period $\log_{10}(T)$ that is
+of interest, and that the observations consist of $N$ measurements
+$\boldsymbol{y} = \{y_0, y_1, ..., y_{N-1}\}$,
+at times $\boldsymbol{t} = \{0,1,2,...,N-1\}$, observed with noise:
+\begin{align}
+y_i &\sim \textnormal{Normal}(y(t_i), \sigma^2).
+\end{align}
+The noise level $\sigma$ was set to unity.
+
+The unknown parameters are the oscillation parameters $(A, T, Q)$, to which
+we assigned the following priors:
+\begin{align}
+\ln A &\sim \textnormal{Normal}(0, 1) \\
+\log_{10} T &\sim \textnormal{Uniform}(\log_{10}(N) - 1, \log_{10}(N)) \\
+\ln Q &\sim \textnormal{Uniform}(\ln 1, \ln 1000).
+\end{align}
+We proceeded to compute the conditional entropy
+$H(\log_{10}(\tau) | \boldsymbol{y})$ using the approach of \citet{brewer},
+and hence the mutual information $I(\log_{10}(\tau) ; \boldsymbol{y})$.
+The results are given in Table~\ref{tab:oscillation_results}.
+
 
 
 \begin{table}[!ht]
