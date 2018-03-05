@@ -27,6 +27,19 @@
 \setlength{\parskip}{1em}
 
 \section{A Damped, Stochastically-Excited Oscillator}
+Consider the following ordinary differential equation, which describes
+a damped and excited oscillator:
+\begin{align}
+\frac{d^2y}{dt^2} + \frac{\omega_0}{Q}\frac{dy}{dt}
+        + \omega_0^2\frac{dy}{dt} &= \epsilon(t).\label{eqn:ode}
+\end{align}
+The function $y(t)$ is the resulting signal, and the parameters $\omega_0$
+are the angular frequency (that the signal would have if
+the driving force $\epsilon(t)$ were zero) and $Q$ is the quality factor.
+If the driving force $\epsilon{t}$ is only defined probabilistically (i.e.,
+it is specified to be white noise) then Equation~\ref{eqn:ode} becomes a
+stochastic differential equation whose solution is a probability distribution
+for $y(t)$.
 
 \begin{table}[!ht]
 \centering
