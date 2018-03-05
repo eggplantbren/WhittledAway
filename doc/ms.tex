@@ -48,6 +48,7 @@ covariance function given by
 \begin{align}
 C(\tau) &= A^2\left[\cos(\eta\omega_0\tau)
                 + \frac{1}{2\eta Q}\sin(\eta\omega_0\tau)\right]
+    \label{eqn:oscillation_covariance}
 \end{align}
 where $\eta = \sqrt{1 - 1/(4Q^2)}$, $\tau$ is a time separation,
 and $Q > 1/2$ (i.e., we assume the oscillation is not overdamped).
@@ -58,7 +59,15 @@ the product of an oscillation and an exponential decay:
 \begin{align}
 C(\tau) &= A\exp\left(-\frac{\omega_0\tau}{2Q}\right)\cos(\omega_0\tau)
 \end{align}
-which was the form assumed by \citep{brewer_stello}.
+which was the form assumed by \citet{brewer_stello}.
+
+The power spectral density corresponding to
+Equation~\ref{eqn:oscillation_covariance} is
+\begin{align}
+S(\omega) &= \sqrt{\frac{2}{\pi}}
+             \frac{S_0\omega_0^4}
+                  {(\omega^2 - \omega_0^2)^2 + \omega_0^2\omega^2/Q^2}.
+\end{align}
 
 
 \begin{table}[!ht]
