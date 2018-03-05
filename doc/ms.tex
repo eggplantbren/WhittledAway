@@ -1,6 +1,7 @@
 \documentclass[a4paper, 12pt]{article}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{booktabs} % For nicer tables
 \usepackage{color}
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=2cm]{geometry}
 \usepackage{graphicx}
@@ -8,6 +9,8 @@
 \usepackage{microtype}
 \usepackage{natbib}
 \usepackage{transparent}
+
+\renewcommand{\arraystretch}{1.2} % More space between table rows
 
 \title{Information Loss from the Whittle Likelihood}
 \author{Brendon J. Brewer}
@@ -27,13 +30,13 @@
 
 \begin{table}[!ht]
 \centering
-\begin{tabular}{|lll|}
-\hline
-$N$         &       {\em Likelihood}      &  {\em Mutual Info. (nats)} \\
+\begin{tabular}{@{}l@{\hspace{3em}}l@{\hspace{2em}}l@{}}
+\toprule
+$N$         &       Likelihood      &  Mut. Inf. (nats) \\
 \hline
 100         &       Exact           & $2.605 \pm 0.053$ \\
 100         &       Whittle         & $2.052 \pm 0.055$ \\
-\hline
+\bottomrule
 \end{tabular}
 \caption{\label{tab:oscillator_results}}
 \end{table}
@@ -41,12 +44,12 @@ $N$         &       {\em Likelihood}      &  {\em Mutual Info. (nats)} \\
 
 \begin{table}[!ht]
 \centering
-\begin{tabular}{|ll|}
-\hline
+\begin{tabular}{@{}ll@{}}
+\toprule
 $N$         &       $\Delta$ {\em Mutual Info. (nats)} \\
 \hline
 100         &       $0.553 \pm 0.056$ \\
-\hline
+\bottomrule
 \end{tabular}
 \caption{The error bars are smaller than what you might expect from
 taking differences in Table~\ref{tab:oscillator_results}, due to
