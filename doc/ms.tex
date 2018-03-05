@@ -12,7 +12,7 @@
 
 \renewcommand{\arraystretch}{1.2} % More space between table rows
 
-\title{Bayesian inference from time series: Information loss and the Whittle likelihood}
+\title{Bayesian Inference from Time Series: Information Loss and the Whittle Likelihood}
 \author{Brendon J. Brewer}
 \date{2018}
 
@@ -49,10 +49,16 @@ covariance function given by
 C(\tau) &= A^2\left[\cos(\eta\omega_0\tau)
                 + \frac{1}{2\eta Q}\sin(\eta\omega_0\tau)\right]
 \end{align}
-where $\eta = \sqrt{|1 - 1/(4Q^2)|}$, $\tau$ is a time separation,
+where $\eta = \sqrt{1 - 1/(4Q^2)}$, $\tau$ is a time separation,
 and $Q > 1/2$ (i.e., we assume the oscillation is not overdamped).
-An equivalent expression is given by \citet{anderson} and
-\citet{celerite}.
+A more general expression which allows for $Q \leq 1/2$
+is given by \citet{anderson} and \citet{celerite}.
+In the limit of large $Q$, the covariance function is approximately
+the product of an oscillation and an exponential decay:
+\begin{align}
+C(\tau) &= A\exp\left(-\frac{\omega_0\tau}{2Q}\right)\cos(\omega_0\tau)
+\end{align}
+which was the form assumed by \citep{brewer_stello}.
 
 
 \begin{table}[!ht]
@@ -96,7 +102,10 @@ the common stream of datasets.\label{tab:oscillator_differences}}
 
 \begin{thebibliography}{999}
 \bibitem[Anderson et al.(1990)]{anderson}
-Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. "Modeling of solar oscillation power spectra." The Astrophysical Journal 364 (1990): 699-705.
+Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. ``Modeling of solar oscillation power spectra.'' The Astrophysical Journal 364 (1990): 699-705.
+
+\bibitem[Brewer and Stello(2009)]{brewer_stello}
+Brewer, Brendon J., and Dennis Stello. ``Gaussian process modelling of asteroseismic data.'' Monthly Notices of the Royal Astronomical Society 395, no. 4 (2009): 2226-2233.
 
 \bibitem[Foreman-Mackey et al.(2017)]{celerite}
 Foreman-Mackey, D., Agol, E., Ambikasaran, S. and Angus, R., 2017. Fast and scalable Gaussian process modeling with applications to astronomical time series. The Astronomical Journal, 154(6), p.220.
