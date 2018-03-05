@@ -41,6 +41,20 @@ it is specified to be white noise) then Equation~\ref{eqn:ode} becomes a
 stochastic differential equation whose solution is a probability distribution
 for $y(t)$.
 
+We assume that the probability distribution for $\epsilon(t)$ is indeed white
+noise. In this case, the probability distribution for $y(t)$ given the
+parameters is a gaussian process with mean function of zero and
+covariance function given by
+\begin{align}
+C(\tau) &= A^2\left[\cos(\eta\omega_0\tau)
+                + \frac{1}{2\eta Q}\sin(\eta\omega_0\tau)\right]
+\end{align}
+where $\eta = \sqrt{|1 - 1/(4Q^2)|}$, $\tau$ is a time separation,
+and $Q > 1/2$ (i.e., we assume the oscillation is not overdamped).
+An equivalent expression is given by \citet{anderson} and
+\citet{celerite}.
+
+
 \begin{table}[!ht]
 \centering
 \begin{tabular}{@{}l@{\hspace{3em}}l@{\hspace{2em}}l@{}}
@@ -79,6 +93,9 @@ the common stream of datasets.\label{tab:oscillator_differences}}
 \end{table}
 
 \begin{thebibliography}{999}
+\bibitem[Anderson et al.(1990)]{anderson}
+Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. "Modeling of solar oscillation power spectra." The Astrophysical Journal 364 (1990): 699-705.
+
 \bibitem[Foreman-Mackey et al.(2017)]{celerite}
 Foreman-Mackey, D., Agol, E., Ambikasaran, S. and Angus, R., 2017. Fast and scalable Gaussian process modeling with applications to astronomical time series. The Astronomical Journal, 154(6), p.220.
 \end{thebibliography}
