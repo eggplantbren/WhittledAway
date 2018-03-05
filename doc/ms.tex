@@ -26,6 +26,13 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1em}
 
+\section{Introduction}
+
+In a recent paper, I introduced a computational technique based on Nested
+Sampling for estimating the entropy of probability distributions which are
+usually only accessible through sampling, such as posterior distributions.
+
+
 \section{A Damped, Stochastically-Excited Oscillator}
 Consider the following ordinary differential equation, which describes
 a damped and excited oscillator:
@@ -66,7 +73,15 @@ Equation~\ref{eqn:oscillation_covariance} is
 \begin{align}
 S(\omega) &= \sqrt{\frac{2}{\pi}}
              \frac{S_0\omega_0^4}
-                  {(\omega^2 - \omega_0^2)^2 + \omega_0^2\omega^2/Q^2}.
+                  {(\omega^2 - \omega_0^2)^2 + \omega_0^2\omega^2/Q^2}
+\end{align}
+where $S_0 = A/(\omega_0Q)$.
+
+\subsection{Inferring the period}
+The parameter $\omega_0$ is the angular frequency, related to the period
+$T$ by
+\begin{align}
+T &= \frac{2\pi}{\omega_0}.
 \end{align}
 
 
@@ -86,7 +101,11 @@ $N$         &       Likelihood      &  Mut. Inf. (nats) \\
 200         &       Whittle         &   \\
 \bottomrule
 \end{tabular}
-\caption{\label{tab:oscillator_results}}
+\caption{The mutual information between the data and the log-period, for
+different numbers of datapoints $N$ and for different likelihoods (exact vs.
+Whittle).
+This is equal to the prior expected reduction in the entropy
+in going from the prior to the posterior.\label{tab:oscillator_results}}
 \end{table}
 
 
@@ -113,11 +132,14 @@ the common stream of datasets.\label{tab:oscillator_differences}}
 \bibitem[Anderson et al.(1990)]{anderson}
 Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. ``Modeling of solar oscillation power spectra.'' The Astrophysical Journal 364 (1990): 699-705.
 
+\bibitem[Brewer(2017)]{brewer}
+Brewer, Brendon J. ``Computing Entropies with Nested Sampling.'' Entropy 19, no. 8 (2017): 422.
+
 \bibitem[Brewer and Stello(2009)]{brewer_stello}
 Brewer, Brendon J., and Dennis Stello. ``Gaussian process modelling of asteroseismic data.'' Monthly Notices of the Royal Astronomical Society 395, no. 4 (2009): 2226-2233.
 
 \bibitem[Foreman-Mackey et al.(2017)]{celerite}
-Foreman-Mackey, D., Agol, E., Ambikasaran, S. and Angus, R., 2017. Fast and scalable Gaussian process modeling with applications to astronomical time series. The Astronomical Journal, 154(6), p.220.
+Foreman-Mackey, Daniel, Eric Agol, Sivaram Ambikasaran, and Ruth Angus. ``Fast and scalable Gaussian process modeling with applications to astronomical time series.'' The Astronomical Journal 154, no. 6 (2017): 220.
 \end{thebibliography}
 
 \end{document}
