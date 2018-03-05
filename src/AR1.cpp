@@ -70,13 +70,17 @@ void AR1::calculate_logl()
     {
         logl = 0.0;
 
-        double model_psd, data_psd;
+        double model_psd, data_psd, f, w;
+        double alpha = exp(-1.0/L);
+        double sigma = beta/sqrt(1.0 - alpha*alpha);
 
         // Loop over first half of fft
         for(size_t j=0; j<N/2; ++j)
         {
+            f = static_cast<double>(j)/N;
+
             // Model PSD
-//            model_psd = sigma*sigma;
+            model_psd = sigma*sigma/(1.0 + alpha*alpha - 2*alpha*cos(2*M_PI*f));
 
             // Data PSD
             data_psd = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2));
