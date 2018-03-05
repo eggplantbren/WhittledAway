@@ -32,6 +32,19 @@ In a recent paper, I introduced a computational technique based on Nested
 Sampling for estimating the entropy of probability distributions which are
 usually only accessible through sampling, such as posterior distributions.
 
+In astronomy, time series analysis of variable sources has often been performed
+in the frequency domain \citep[e.g.][]{lomb, hatzes, helio}. However,
+a number of researchers have applied existing time series models from
+statistics \citep{brockwell_davis} or custom-made models to infer parameters
+directly from the time series data, without any use of the frequency domain
+\citep[e.g.][]{gregory_loredo, gregory, kelly, brewer_stello, farr}.
+
+Methods that analyse the time series data directly are often less convenient than frequency-domain fits, and can have a much greater computational cost,
+despite recent computational advances which have improved the matter
+considerably \citep[e.g.][]{hodlr, celerite}. Yet the question remains ---
+if we opt for the convenient frequency-domain methods, how much relevant
+information are we throwing away? That is the focus of this paper.
+
 
 \section{A Damped, Stochastically-Excited Oscillator}
 Consider the following ordinary differential equation, which describes
@@ -125,7 +138,7 @@ $N$         &       Likelihood      &  Mut. Inf. (nats) \\
 different numbers of datapoints $N$ and for different likelihoods (exact vs.
 Whittle).
 This is equal to the prior expected reduction in the entropy
-in going from the prior to the posterior.\label{tab:oscillator_results}}
+in going from the prior to the posterior.\label{tab:oscillation_results}}
 \end{table}
 
 
@@ -144,11 +157,16 @@ $N$         &       $\Delta$ Mut. Inf. (nats) \\
 Whittle likelihoods. This quantifies the size of the advantage of the exact
 likelihood.
 The error bars are smaller than what you might expect from
-taking differences in Table~\ref{tab:oscillator_results}, due to
-the common stream of datasets.\label{tab:oscillator_differences}}
+taking differences in Table~\ref{tab:oscillation_results}, due to
+the common stream of datasets.\label{tab:oscillation_differences}}
 \end{table}
 
 \begin{thebibliography}{999}
+
+\bibitem[Ambikasaran et al.(2016)]{hodlr}
+Ambikasaran, Sivaram, Daniel Foreman-Mackey, Leslie Greengard, David W. Hogg, and Michael O’Neil. ``Fast direct methods for Gaussian processes.''
+IEEE transactions on pattern analysis and machine intelligence 38, no. 2 (2016): 252-265.
+
 \bibitem[Anderson et al.(1990)]{anderson}
 Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. ``Modeling of solar oscillation power spectra.'' The Astrophysical Journal 364 (1990): 699-705.
 
@@ -156,10 +174,38 @@ Anderson, Edwin R., Thomas L. Duvall Jr, and Stuart M. Jefferies. ``Modeling of 
 Brewer, Brendon J. ``Computing Entropies with Nested Sampling.'' Entropy 19, no. 8 (2017): 422.
 
 \bibitem[Brewer and Stello(2009)]{brewer_stello}
-Brewer, Brendon J., and Dennis Stello. ``Gaussian process modelling of asteroseismic data.'' Monthly Notices of the Royal Astronomical Society 395, no. 4 (2009): 2226-2233.
+Brewer, Brendon J., and Dennis Stello. ``Gaussian process modelling of asteroseismic data.'' Monthly Notices of the Royal Astronomical Society 395, no. 4 
+(2009): 2226-2233.
+
+\bibitem[Brockwell and Davis(2013)]{brockwell_davis}
+Brockwell, P.J. and Davis, R.A., 2013. Time series: theory and methods. Springer Science \& Business Media.
+
+\bibitem[Christensen-Dalsgaard(2002)]{helio}
+Christensen-Dalsgaard, Jørgen. ``Helioseismology.'' Reviews of Modern Physics 74, no. 4 (2002): 1073.
+
+\bibitem[Farr et al.(2018)]{farr}
+Farr, Will M., Benjamin JS Pope, Guy R. Davies, Thomas SH North, Timothy R. White, Jim W. Barrett, Andrea Miglio et al. ``Aldebaran b's temperate past uncovered in planet search data.'' arXiv preprint arXiv:1802.09812 (2018).
 
 \bibitem[Foreman-Mackey et al.(2017)]{celerite}
 Foreman-Mackey, Daniel, Eric Agol, Sivaram Ambikasaran, and Ruth Angus. ``Fast and scalable Gaussian process modeling with applications to astronomical time series.'' The Astronomical Journal 154, no. 6 (2017): 220.
+
+\bibitem[Gregory(2005)]{gregory}
+Gregory, Philip C.
+``A Bayesian analysis of extrasolar planet data for HD 208487.''
+In AIP Conference Proceedings, vol. 803, no. 1, pp. 139-145. AIP, 2005.
+
+\bibitem[Gregory and Loredo(1992)]{gregory_loredo}
+Gregory, P. C., and Thomas J. Loredo. ``A new method for the detection of a periodic signal of unknown shape and period.'' The Astrophysical Journal 398 (1992): 146-168.
+
+\bibitem[Hatzes et al.(1993)]{hatzes}
+Hatzes, A.P. and Cochran, W.D., 1993. Long-period radial velocity variations in three K giants. The Astrophysical Journal, 413, pp.339-348.
+
+\bibitem[Kelly(2009)]{kelly}
+Kelly, Brandon C., Jill Bechtold, and Aneta Siemiginowska. ``Are the variations in quasar optical flux driven by thermal fluctuations?.'' The Astrophysical Journal 698, no. 1 (2009): 895.
+
+\bibitem[Lomb(1976)]{lomb}
+Lomb, Nicholas R. ``Least-squares frequency analysis of unequally spaced data.'' Astrophysics and space science 39, no. 2 (1976): 447-462.
+
 \end{thebibliography}
 
 \end{document}
