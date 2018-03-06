@@ -5,6 +5,7 @@
 \usepackage{color}
 \usepackage[left=2cm, right=2cm, bottom=3cm, top=2cm]{geometry}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{microtype}
 \usepackage{natbib}
@@ -52,15 +53,37 @@ usually only accessible through sampling, such as posterior distributions.
 Assume a quantity has been measured at $N$ equally-spaced time points
 $\boldsymbol{t} = \{0, 1, 2, ..., N-1\}$, resulting in observations
 $\boldsymbol{y} = \{y_0, y_1, ..., y_{N-1}\}$.
-% Use GP framework
+Throughout this paper, I will specify all models in the framework of
+Gaussian processes. Ultimately, this means the probability distribution for
+the data $\boldsymbol{y}$ given some parameters $\boldsymbol{\theta}$ will
+be a multivariate normal distribution whose mean vector $\boldsymbol{\mu}$
+and covariance matrix $\mathbf{C}$ depend on $\boldsymbol{\theta}$:
+\begin{align}
+\boldsymbol{y} | \boldsymbol{\theta} &\sim
+    \textnormal{Normal}\left(\boldsymbol{\mu}(\boldsymbol{\theta}),
+                             \mathbf{C}(\boldsymbol{\theta})\right).
+\end{align}
+The full expression for this probability density is
+\begin{align}
+p(\boldsymbol{y} | \boldsymbol{\theta})
+    &= \frac{1}{\sqrt{(2\pi)^N\det \mathbf{C}}}
+        \exp\left[-\frac{1}{2}
+                    (\boldsymbol{y} - \boldsymbol{\mu})^T
+                    \mathbf{C}^{-1}
+                    (\boldsymbol{y} - \boldsymbol{\mu})\right]
+\end{align}
+which also provides the exact likelihood function if we wish to infer
+$\boldsymbol{\theta}$ from $\boldsymbol{y}$. The determinant and inverse
+are typically expensive, though in some cases fast methods are available
+\citep[e.g.][]{mackay, hodlr, celerite}.
 
 The whittle likelihood is
 \begin{align}
 p(\boldsymbol{y} | \boldsymbol{\theta})
     &\propto -\sum_{k=0}^{N/2 - 1}
-         \left(S(\omega_k; \boldsymbol{\theta})
+         \left[S(\omega_k; \boldsymbol{\theta})
          + \frac{I(\omega_k; \boldsymbol{y})}
-                {S(\omega_k; \boldsymbol{\theta})}\right)\label{eqn:whittle}
+                {S(\omega_k; \boldsymbol{\theta})}\right]\label{eqn:whittle}
 \end{align}
 where $I(\omega_k; \boldsymbol{y})$ is the power spectrum of the data,
 $S(\omega_k; \boldsymbol{\theta})$ is the power spectral density implied
@@ -78,7 +101,8 @@ statistics \citep{brockwell_davis} or custom-made models to infer parameters
 directly from the time series data, without any use of the frequency domain
 \citep[e.g.][]{gregory_loredo, gregory, kelly, brewer_stello, farr}.
 
-Methods that analyse the time series data directly are often less convenient than frequency-domain fits, and can have a much greater computational cost,
+Methods that analyse the time series data directly are often less convenient
+than frequency-domain fits, and can have a much greater computational cost,
 despite recent computational advances which have improved the matter
 considerably \citep[e.g.][]{hodlr, celerite}. Yet the question remains ---
 if we opt for the convenient frequency-domain methods, how much relevant
@@ -173,11 +197,11 @@ $N$         &       Likelihood      &  Mut. Inf. (nats) \\
 20          &       Exact           & $1.930 \pm 0.055$ \\
 50          &       Exact           & $2.391 \pm 0.056$ \\
 100         &       Exact           & $2.605 \pm 0.053$ \\
-200         &       Exact           &   \\
+200         &       Exact           & $2.830 \pm 0.054$ \\
 20          &       Whittle         & $1.491 \pm 0.055$ \\ 
 50          &       Whittle         & $1.957 \pm 0.055$ \\
 100         &       Whittle         & $2.052 \pm 0.055$ \\
-200         &       Whittle         &   \\
+200         &       Whittle         & $2.158 \pm 0.061$  \\
 \bottomrule
 \end{tabular}
 \caption{The mutual information between the data and the log-period, for
@@ -197,7 +221,7 @@ $N$         &       $\Delta$ Mut. Inf. (nats) \\
 20          &       $0.439 \pm 0.053$ \\
 50          &       $0.434 \pm 0.056$ \\
 100         &       $0.553 \pm 0.056$ \\
-200         & \\
+200         &       $0.671 \pm 0.062$ \\
 \bottomrule
 \end{tabular}
 \caption{The difference in mutual information between the exact and
@@ -261,6 +285,11 @@ Axioms 1, no. 1 (2012): 38-73.
 
 \bibitem[Lomb(1976)]{lomb}
 Lomb, Nicholas R. ``Least-squares frequency analysis of unequally spaced data.'' Astrophysics and space science 39, no. 2 (1976): 447-462.
+
+\bibitem[Gibbs and MacKay(1997)]{mackay}
+MacKay, D., and M. N. Gibbs. ``Efficient implementation of Gaussian processes.'' Neural Computation (1997).
+Available at \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.48.8224&rep=rep1&type=pdf}
+(as of 2018-03-07).
 
 \bibitem[van Erp et al.(2017)]{vanerp}
 van Erp, H. R., Ronald O. Linger, and Pieter HAJM van Gelder. ``Inquiry Calculus and the Issue of Negative Higher Order Informations.'' Entropy 19, no. 11 (2017): 622.
