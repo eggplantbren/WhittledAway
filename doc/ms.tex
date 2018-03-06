@@ -19,14 +19,29 @@
 \begin{document}
 \maketitle
 
-\abstract{\noindent I investigate the information content of a time series
-          dataset for inferring a parameter of interest. }
+\abstract{\noindent Inference from a time series dataset can be performed
+          either with the raw time series data, or after transformation to
+          the fourier domain. In the latter case, Whittle's approximation to
+          the likelihood function is computationally convenient. However, the
+          question of how much information is lost remains open --- in many
+          cases, the cost of extra computing time might be worth the benefits
+          of preserving all of the information from the raw time series data.
+          In this paper I investigate this question using numerical experiments
+          to quantify the mutual information between a dataset and a parameter
+          under the exact and the Whittle likelihoods.}
 
 % Need this after the abstract
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1em}
 
 \section{Introduction}
+
+Just as probability theory (used in the `Bayesian' way)
+quantifies the degree to which one statement or
+proposition implies another \citep{knuth_skilling},
+information theory describes the
+degree to which resolving one question would resolve another
+\citep{knuth_questions, vanerp}.
 
 In a recent paper, I introduced a computational technique based on Nested
 Sampling for estimating the entropy of probability distributions which are
@@ -203,8 +218,20 @@ Hatzes, A.P. and Cochran, W.D., 1993. Long-period radial velocity variations in 
 \bibitem[Kelly(2009)]{kelly}
 Kelly, Brandon C., Jill Bechtold, and Aneta Siemiginowska. ``Are the variations in quasar optical flux driven by thermal fluctuations?.'' The Astrophysical Journal 698, no. 1 (2009): 895.
 
+\bibitem[Knuth(2005)]{knuth_questions}
+Knuth, K.H. Toward question-asking machines: The logic of questions and the inquiry calculus. In
+Proceedings of the 10th International Workshop On Artificial Intelligence and Statistics, Barbados, 6–8
+January 2005.
+
+\bibitem[Knuth and Skilling(2012)]{knuth_skilling}
+Knuth, Kevin H., and John Skilling. ``Foundations of inference.''
+Axioms 1, no. 1 (2012): 38-73.
+
 \bibitem[Lomb(1976)]{lomb}
 Lomb, Nicholas R. ``Least-squares frequency analysis of unequally spaced data.'' Astrophysics and space science 39, no. 2 (1976): 447-462.
+
+\bibitem[van Erp et al.(2017)]{vanerp}
+van Erp, H. R., Ronald O. Linger, and Pieter HAJM van Gelder. ``Inquiry Calculus and the Issue of Negative Higher Order Informations.'' Entropy 19, no. 11 (2017): 622.
 
 \end{thebibliography}
 
