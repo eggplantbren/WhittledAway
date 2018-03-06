@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <armadillo>
+#include <celerite/celerite.h>
 #include <iostream>
 
 namespace WhittledAway
@@ -14,6 +15,7 @@ void Oscillation::generate(InfoNest::RNG& rng)
     log10_period = log10(N) - rng.rand();
     quality = exp(log(1.0) + log(1000.0)*rng.rand());
 
+    calculate_C();
     generate_data(rng);
     calculate_logl();
 }
@@ -73,8 +75,6 @@ double Oscillation::perturb_parameters(InfoNest::RNG& rng)
         quality = exp(quality);
     }
 
-    if(!whittle)
-        calculate_C();
     calculate_logl();
 
     return logH;
@@ -116,15 +116,49 @@ void Oscillation::calculate_logl()
         // Exact likelihood in the time domain
         logl = 0.0;
 
-        logl += -0.5*log(2*M_PI)*N;
+        // Only need these four
+        Eigen::VectorXd a(1);
+        Eigen::VectorXd b(1);
+        Eigen::VectorXd c(1);
+        Eigen::VectorXd d(1);
 
-        // Log determinant
-        double log_det = 0.0;
+        // Note: amplitude = S0*omega0*Q
+        double omega0, Q, Qterm;
+
+        omega0 = 2.0*M_PI/pow(10.0, log10_period);
+        Q = quality;
+
+        Qterm = sqrt(4*Q*Q - 1.0);
+        a(0) = A;
+        b(0) = A / Qterm;
+        c(0) = omega0 / (2*Q);
+        d(0) = c(0) * Qterm;
+
+        // Timestamps and variance
+        Eigen::VectorXd t(N), var(N);
         for(size_t i=0; i<N; ++i)
-            log_det += 2*log(Lmat(i, i));
+        {
+            t[i] = i;
+            var[i] = sigma*sigma;
+        }
 
-        // Solve
-        logl += -0.5*log_det - 0.5*y.dot(L.solve(y));
+        // Celerite solver
+        celerite::solver::CholeskySolver<double> solver;
+        try
+        {
+            solver.compute(0.0,
+                           Eigen::VectorXd(0), Eigen::VectorXd(0),
+                           a, b, c, d,
+                           t, var);
+
+            logl += -0.5*log(2*M_PI)*N;
+            logl += -0.5*solver.log_determinant();
+            logl += -0.5*solver.dot_solve(y);
+        }
+        catch(...)
+        {
+            logl = -1E300;
+        }
     }
 
     if(std::isnan(logl) || std::isinf(logl))

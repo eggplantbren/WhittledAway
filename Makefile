@@ -1,5 +1,5 @@
 CC = g++
-CCFLAGS = -std=c++17 -O3 -Wall -Wextra -pedantic -I InfoNest/cpp -I include
+CCFLAGS = -std=c++17 -O3 -Wall -Wextra -pedantic -I InfoNest/cpp -I include -I celerite/cpp/include
 
 default:
 	make lib -C InfoNest/cpp
