@@ -153,8 +153,11 @@ Equation~\ref{eqn:oscillation_covariance} is
 S(\omega) &= \frac{2S_0\omega_0^4}
                   {(\omega^2 - \omega_0^2)^2 + \omega_0^2\omega^2/Q^2}
 \end{align}
-where $S_0 = A^2/(\omega_0Q)$. {\bf NB: different from Celerite paper
-due to changed Fourier Transform convention}
+where $S_0 = A^2/(\omega_0Q)$. This differs from the formula given by
+\citet{celerite} by a factor of $\sqrt{2\pi}$ due to different fourier
+transform conventions (this formula omits a factor of $\frac{1}{\sqrt{2\pi}$
+in front of the continuous fourier transform).
+
 
 \subsection{Inferring the period}
 The parameter $\omega_0$ is the angular frequency, related to the period
