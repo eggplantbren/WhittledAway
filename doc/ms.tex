@@ -57,10 +57,12 @@ Throughout this paper, I will specify all models in the framework of
 Gaussian processes. Ultimately, this means the probability distribution for
 the data $\boldsymbol{y}$ given some parameters $\boldsymbol{\theta}$ will
 be a multivariate normal distribution whose mean vector $\boldsymbol{\mu}$
-and covariance matrix $\mathbf{C}$ depend on $\boldsymbol{\theta}$:
+and covariance matrix $\mathbf{C}$ depend on $\boldsymbol{\theta}$. Throughout
+this paper the mean vector will be set to zero, so dependence on the parameters
+is through the covariance matrix only:
 \begin{align}
 \boldsymbol{y} | \boldsymbol{\theta} &\sim
-    \textnormal{Normal}\left(\boldsymbol{\mu}(\boldsymbol{\theta}),
+    \textnormal{Normal}\left(\boldsymbol{0},
                              \mathbf{C}(\boldsymbol{\theta})\right).
 \end{align}
 The full expression for this probability density is
@@ -68,9 +70,9 @@ The full expression for this probability density is
 p(\boldsymbol{y} | \boldsymbol{\theta})
     &= \frac{1}{\sqrt{(2\pi)^N\det \mathbf{C}}}
         \exp\left[-\frac{1}{2}
-                    (\boldsymbol{y} - \boldsymbol{\mu})^T
+                    \boldsymbol{y}^T
                     \mathbf{C}^{-1}
-                    (\boldsymbol{y} - \boldsymbol{\mu})\right]
+                    \boldsymbol{y}\right]
 \end{align}
 which also provides the exact likelihood function if we wish to infer
 $\boldsymbol{\theta}$ from $\boldsymbol{y}$. The determinant and inverse
