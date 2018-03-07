@@ -168,8 +168,8 @@ void Oscillation::calculate_logl()
 void Oscillation::print(std::ostream& out) const
 {
     out<<A<<' '<<log10_period<<' '<<quality<<' ';
-    for(size_t i=0; i<N; ++i)
-        out << y[i] << ' ';
+//    for(size_t i=0; i<N; ++i)
+//        out << y[i] << ' ';
 }
 
 double Oscillation::parameter_distance(const Oscillation& s1, const Oscillation& s2)
