@@ -114,7 +114,7 @@ Consider the following ordinary differential equation, which describes
 a damped and excited oscillator:
 \begin{align}
 \frac{d^2y}{dt^2} + \frac{\omega_0}{Q}\frac{dy}{dt}
-        + \omega_0^2\frac{dy}{dt} &= \epsilon(t).\label{eqn:ode}
+        + \omega_0^2y &= \epsilon(t).\label{eqn:ode}
 \end{align}
 The function $y(t)$ is the resulting signal, and the parameters $\omega_0$
 are the angular frequency (that the signal would have if
@@ -129,7 +129,8 @@ noise. In this case, the probability distribution for $y(t)$ given the
 parameters is a gaussian process with mean function of zero and
 covariance function given by
 \begin{align}
-C(\tau) &= A^2\left[\cos(\eta\omega_0\tau)
+C(\tau) &= A^2\exp\left(-\frac{\omega_0\tau}{2Q}\right)
+            \left[\cos(\eta\omega_0\tau)
                 + \frac{1}{2\eta Q}\sin(\eta\omega_0\tau)\right]
     \label{eqn:oscillation_covariance}
 \end{align}
@@ -146,11 +147,11 @@ which was the form assumed by \citet{brewer_stello}.
 The power spectral density corresponding to
 Equation~\ref{eqn:oscillation_covariance} is
 \begin{align}
-S(\omega) &= \sqrt{\frac{2}{\pi}}
-             \frac{S_0\omega_0^4}
+S(\omega) &= \frac{2S_0\omega_0^4}
                   {(\omega^2 - \omega_0^2)^2 + \omega_0^2\omega^2/Q^2}
 \end{align}
-where $S_0 = A/(\omega_0Q)$.
+where $S_0 = A^2/(\omega_0Q)$. {\bf NB: different from Celerite paper
+due to changed Fourier Transform convention}
 
 \subsection{Inferring the period}
 The parameter $\omega_0$ is the angular frequency, related to the period
