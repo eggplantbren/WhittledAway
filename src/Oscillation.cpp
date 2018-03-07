@@ -75,6 +75,7 @@ double Oscillation::perturb_parameters(InfoNest::RNG& rng)
         quality = exp(quality);
     }
 
+//    calculate_C();
     calculate_logl();
 
     return logH;
@@ -155,6 +156,21 @@ void Oscillation::calculate_logl()
         {
             logl = -1E300;
         }
+
+        /*
+        // Non-celerite computation, tested and found to be equivalent
+        logl = 0.0;
+        logl += -0.5*log(2*M_PI)*N;
+
+        // Log determinant
+        double log_det = 0.0;
+        for(size_t i=0; i<N; ++i)
+            log_det += 2*log(Lmat(i, i));
+
+        // Solve
+        logl += -0.5*log_det - 0.5*y.dot(L.solve(y));
+        */
+
     }
 
     if(std::isnan(logl) || std::isinf(logl))
