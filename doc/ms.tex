@@ -80,19 +80,22 @@ are typically expensive, though in some cases fast methods are available
 The whittle likelihood is
 \begin{align}
 p(\boldsymbol{y} | \boldsymbol{\theta})
-    &\propto -\sum_{k=0}^{N/2 - 1}
+    &\propto \exp\left(-\sum_{k=1}^{\lfloor N/2 - 1 \rfloor}
          \left[S(\omega_k; \boldsymbol{\theta})
          + \frac{I(\omega_k; \boldsymbol{y})}
-                {S(\omega_k; \boldsymbol{\theta})}\right]\label{eqn:whittle}
+                {S(\omega_k; \boldsymbol{\theta})}\right]
+                \right)
+\label{eqn:whittle}
 \end{align}
 where $I(\omega_k; \boldsymbol{y})$ is the power spectrum of the data,
 $S(\omega_k; \boldsymbol{\theta})$ is the power spectral density implied
 by the model parameters, and the summation is over the angular frequencies
 involved in the first half of the discrete fourier transform.
 Equation~\ref{eqn:whittle} is equivalent to an exponential distribution
-for the empirical power spectrum
+for the empirical power spectrum (i.e., the periodogram)
 $I(\omega_k; \boldsymbol{y})$ whose expectation is given by the
-model power spectrum $S(\omega_k; \boldsymbol{\theta})$.
+model power spectrum (i.e., the power spectral density)
+$S(\omega_k; \boldsymbol{\theta})$.
 
 In astronomy, time series analysis of variable sources has often been performed
 in the frequency domain \citep[e.g.][]{lomb, hatzes, helio}. However,
