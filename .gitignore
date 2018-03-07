@@ -1,5 +1,6 @@
 # Binaries
 main
+test/test
 
 # Output files
 latest_particles.txt

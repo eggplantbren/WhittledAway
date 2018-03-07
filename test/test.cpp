@@ -16,7 +16,7 @@ int main()
                     "Examples must derive from WhittledAway::Model.");
 
     // Create random number generator
-    InfoNest::RNG rng(0);
+    InfoNest::RNG rng(1);
 
     // Make a particle
     TheModel o1;
@@ -26,7 +26,8 @@ int main()
     o1.print(std::cout);
     std::cout << std::endl;
 
-    for(int i=0; i<1000000; ++i)
+    // Do MCMC
+    for(int i=0; i<10000000; ++i)
     {
         // Make a proposal
         auto o2 = o1;
@@ -36,14 +37,14 @@ int main()
         if(rng.rand() <= exp(logH))
             o1 = o2;
 
-        // Print
         if((i+1)%100 == 0)
         {
             std::cerr << (i+1) << std::endl;
             o1.print(std::cout);
             std::cout << std::endl;
         }
-    }
+}
+
 
     return 0;
 }

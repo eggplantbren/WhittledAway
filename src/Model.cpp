@@ -35,7 +35,7 @@ void Model::generate_data(InfoNest::RNG& rng)
         y_fft[i] = y[i];
 
     // Take the fft
-    y_fft = arma::fft(y_fft)/sqrt(N);
+    y_fft = arma::fft(y_fft);
 }
 
 

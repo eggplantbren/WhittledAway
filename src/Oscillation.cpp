@@ -25,7 +25,6 @@ void Oscillation::calculate_C()
     // Fill covariance matrix
     double w0 = 2*M_PI/pow(10.0, log10_period);
     double eta = sqrt(std::abs(1.0 - 1.0/(4.0*quality*quality)));
-    double S0 = A/w0/quality;
     double tau;
 
     for(size_t i=0; i<N; ++i)
@@ -34,7 +33,7 @@ void Oscillation::calculate_C()
         {
             tau = std::abs(static_cast<double>(i) - static_cast<double>(j));
             C(i, j) = cos(eta*w0*tau) + sin(eta*w0*tau)/(2.0*eta*quality);
-            C(i, j) *= S0*w0*quality*exp(-w0*tau/(2.0*quality));
+            C(i, j) *= A*A*exp(-w0*tau/(2.0*quality));
 
             if(i != j)
                 C(j, i) = C(i, j);
@@ -54,6 +53,7 @@ double Oscillation::perturb_parameters(InfoNest::RNG& rng)
 
     // Perturb one of the three parameters
     int which = rng.rand_int(3);
+
     if(which == 0)
     {
         A = log(A);
@@ -85,30 +85,28 @@ void Oscillation::calculate_logl()
 {
     if(whittle)
     {
-
-        // https://www4.stat.ncsu.edu/~reich/SpatialStats/code/Whittle.html
         logl = 0.0;
 
-        double model_psd, data_psd, f, w;
+        double model_psd, data_pgram, f, w;
         double w0 = 2*M_PI/pow(10.0, log10_period);
-        double S0 = A/w0/quality;
-        double coeff = sqrt(2.0/M_PI)*S0*pow(w0, 4);
+        double S0 = A*A/w0/quality;
+        double coeff = 2.0*S0*pow(w0, 4);
 
-        // Loop over first half of fft
-        for(size_t j=0; j<N/2; ++j)
+        // Loop over positive frequencies
+        for(size_t j=1; j<=(size_t)floor(0.5*(N-1)); ++j)
         {
             // Model PSD (Celerite paper, Eqn 20)
-            f = static_cast<double>(j) / N;
+            f = static_cast<double>(j)/N;
             w = 2*M_PI*f;
             model_psd = coeff/(pow(w*w - w0*w0, 2)
                                         + w0*w0*w*w/(quality*quality));
             model_psd += sigma*sigma;
 
-            // Data PSD
-            data_psd = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2));
+            // Data periodogram
+            data_pgram = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2))/N;
 
             // Whittle
-            logl += -log(model_psd) - data_psd/model_psd;
+            logl += -log(model_psd) - data_pgram/model_psd;
         }
     }
     else
@@ -122,15 +120,13 @@ void Oscillation::calculate_logl()
         Eigen::VectorXd c(1);
         Eigen::VectorXd d(1);
 
-        // Note: amplitude = S0*omega0*Q
         double omega0, Q, Qterm;
-
         omega0 = 2.0*M_PI/pow(10.0, log10_period);
         Q = quality;
 
         Qterm = sqrt(4*Q*Q - 1.0);
-        a(0) = A;
-        b(0) = A / Qterm;
+        a(0) = A*A;
+        b(0) = A*A / Qterm;
         c(0) = omega0 / (2*Q);
         d(0) = c(0) * Qterm;
 

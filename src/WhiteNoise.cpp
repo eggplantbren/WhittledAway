@@ -62,19 +62,19 @@ void WhiteNoise::calculate_logl()
     {
         logl = 0.0;
 
-        double model_psd, data_psd;
+        double model_psd, data_pgram;
 
         // Loop over first half of fft
-        for(size_t j=0; j<N/2; ++j)
+        for(size_t j=1; j<=(size_t)floor(0.5*(N-1)); ++j)
         {
             // Model PSD
             model_psd = sigma*sigma;
 
-            // Data PSD
-            data_psd = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2));
+            // Data periodogram
+            data_pgram = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2)) / N;
 
             // Whittle
-            logl += -log(model_psd) - data_psd/model_psd;
+            logl += -log(model_psd) - data_pgram/model_psd;
         }
     }
     else
