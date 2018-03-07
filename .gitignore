@@ -10,5 +10,6 @@ run_data.txt
 # LaTeX stuff
 doc/ms.aux
 doc/ms.log
+doc/ms.out
 doc/ms.pdf
 doc/texput.log
