@@ -19,7 +19,7 @@ class WhiteNoise : public Model
         // Noise sd
         double sigma;
 
-        // Calculate log likelihood
+        void generate_data(InfoNest::RNG& rng);
         void calculate_C();
         void calculate_logl();
 

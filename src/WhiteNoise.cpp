@@ -12,9 +12,14 @@ void WhiteNoise::generate(InfoNest::RNG& rng)
 {
     sigma = exp(-10.0 + 20.0*rng.rand());
 
-    calculate_C();
     generate_data(rng);
     calculate_logl();
+}
+
+void WhiteNoise::generate_data(InfoNest::RNG& rng)
+{
+    for(size_t i=0; i<N; ++i)
+        y[i] = sigma*rng.randn();
 }
 
 void WhiteNoise::calculate_C()
