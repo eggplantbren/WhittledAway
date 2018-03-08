@@ -20,6 +20,13 @@ void WhiteNoise::generate_data(InfoNest::RNG& rng)
 {
     for(size_t i=0; i<N; ++i)
         y[i] = sigma*rng.randn();
+
+    // Copy into the Armadillo vector
+    for(size_t i=0; i<N; ++i)
+        y_fft[i] = y[i];
+
+    // Take the fft
+    y_fft = arma::fft(y_fft);
 }
 
 void WhiteNoise::calculate_C()
