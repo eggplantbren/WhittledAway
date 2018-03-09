@@ -1,6 +1,6 @@
 // Includes
 #include <iostream>
-#include "Oscillation.h"
+#include "Models.h"
 #include "RNG.h"
 
 using namespace WhittledAway;

@@ -3,8 +3,7 @@
 #include <iostream>
 #include <type_traits>
 #include "Execute.hpp"
-#include "RNG.h"
-#include "Oscillation.h"
+#include "Models.h"
 
 // MAIN
 int main()
