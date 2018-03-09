@@ -16,8 +16,8 @@ class AR1 : public Model
 {
     private:
 
-        // Mean level, beta, L
-        double mu, beta, L;
+        // Innovation SD and timescale
+        double beta, L;
 
         // Calculate log likelihood
         void calculate_C();

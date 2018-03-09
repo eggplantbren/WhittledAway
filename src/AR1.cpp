@@ -10,7 +10,6 @@ namespace WhittledAway
 
 void AR1::generate(InfoNest::RNG& rng)
 {
-    mu = 1000.0*rng.randn();
     beta = exp(-10.0 + 20.0*rng.rand());
     L = exp(-10.0 + 20.0*rng.rand());
 
@@ -22,9 +21,16 @@ void AR1::generate_data(InfoNest::RNG& rng)
 {
     double alpha = exp(-1.0/L);
     double sigma = beta/sqrt(1.0 - alpha*alpha);
-    y[0] = mu + sigma*rng.randn();
+    y[0] = sigma*rng.randn();
     for(size_t i=1; i<N; ++i)
-        y[i] = mu + alpha*(y[i-1] - mu) + beta*rng.randn();
+        y[i] = alpha*y[i-1] + beta*rng.randn();
+
+    // Copy into the Armadillo vector
+    for(size_t i=0; i<N; ++i)
+        y_fft[i] = y[i];
+
+    // Take the fft
+    y_fft = arma::fft(y_fft);
 }
 
 void AR1::calculate_C()
@@ -36,15 +42,9 @@ double AR1::perturb_parameters(InfoNest::RNG& rng)
 {
     double logH = 0.0;
 
-    int which = rng.rand_int(3);
+    int which = rng.rand_int(2);
 
     if(which == 0)
-    {
-        logH -= -0.5*pow(mu/1000.0, 2);
-        mu += 1000.0*rng.randh();
-        logH += -0.5*pow(mu/1000.0, 2);
-    }
-    else if(which == 1)
     {
         beta = log(beta);
         beta += 20.0*rng.randh();
@@ -70,23 +70,26 @@ void AR1::calculate_logl()
     {
         logl = 0.0;
 
-        double model_psd, data_psd, f;
+        double model_psd, data_pgram, w;
         double alpha = exp(-1.0/L);
         double sigma = beta/sqrt(1.0 - alpha*alpha);
 
         // Loop over first half of fft
-        for(size_t j=0; j<N/2; ++j)
+        for(size_t j=1; j<=(size_t)floor(0.5*(N-1)); ++j)
         {
-            f = static_cast<double>(j)/N;
+            // Angular frequency
+            w = 2.0*M_PI*static_cast<double>(j)/N;
 
             // Model PSD
-            model_psd = sigma*sigma/(1.0 + alpha*alpha - 2*alpha*cos(2*M_PI*f));
+            model_psd = 2.0*sigma*sigma*L
+                            /(4.0*M_PI*M_PI*L*L*w*w + 1.0);
 
-            // Data PSD
-            data_psd = (pow(y_fft[j].real(), 2) + pow(y_fft[j].imag(), 2));
+            // Data periodogram
+            data_pgram = (pow(y_fft[j].real(), 2)
+                                    + pow(y_fft[j].imag(), 2)) / N;
 
             // Whittle
-            logl += -log(model_psd) - data_psd/model_psd;
+            logl += -log(model_psd) - data_pgram/model_psd;
         }
     }
     else
@@ -100,11 +103,11 @@ void AR1::calculate_logl()
         double log_beta = log(beta);
         double prec = 1.0/(beta*beta);
 
-        logl += C - log(sigma) - 0.5*pow((y[0] - mu)/sigma, 2);
+        logl += C - log(sigma) - 0.5*pow(y[0]/sigma, 2);
         for(size_t i=1; i<N; ++i)
         {
             logl += C - log_beta
-                        - 0.5*prec*pow(y[i] - (mu + alpha*(y[i-1] - mu)), 2);
+                        - 0.5*prec*pow(y[i] - alpha*y[i-1], 2);
         }
     }
 
@@ -114,7 +117,7 @@ void AR1::calculate_logl()
 
 void AR1::print(std::ostream& out) const
 {
-    out << mu << ' ' << beta << ' ' << L;
+    out << beta << ' ' << L;
 }
 
 double AR1::parameter_distance(const AR1& s1, const AR1& s2)
