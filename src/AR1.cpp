@@ -82,7 +82,7 @@ void AR1::calculate_logl()
 
             // Model PSD
             model_psd = 2.0*sigma*sigma*L
-                            /(4.0*M_PI*M_PI*L*L*w*w + 1.0);
+                            /(L*L*w*w + 1.0);
 
             // Data periodogram
             data_pgram = (pow(y_fft[j].real(), 2)
