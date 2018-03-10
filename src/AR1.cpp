@@ -11,7 +11,7 @@ namespace WhittledAway
 void AR1::generate(InfoNest::RNG& rng)
 {
     beta = exp(-10.0 + 20.0*rng.rand());
-    L = exp(log(0.1) + log(1E5)*rng.rand());
+    L = exp(log(0.1) + log(10.0*N)*rng.rand());
 
     generate_data(rng);
     calculate_logl();
@@ -54,8 +54,8 @@ double AR1::perturb_parameters(InfoNest::RNG& rng)
     else
     {
         L = log(L);
-        L += log(1E5)*rng.randh();
-        InfoNest::wrap(L, log(0.1), log(1E4));
+        L += log(10.0*N)*rng.randh();
+        InfoNest::wrap(L, log(0.1), log(N));
         L = exp(L);
     }
 
