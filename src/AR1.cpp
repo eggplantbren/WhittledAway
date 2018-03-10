@@ -122,7 +122,10 @@ void AR1::print(std::ostream& out) const
 
 double AR1::parameter_distance(const AR1& s1, const AR1& s2)
 {
-    return std::abs(log(s2.L) - log(s1.L));
+    double dsq = 0.0;
+    dsq += pow(log(s1.beta) - log(s2.beta), 2);
+    dsq += pow(log(s1.L) - log(s2.L), 2);
+    return sqrt(dsq);
 }
 
 } // namespace WhittledAway
