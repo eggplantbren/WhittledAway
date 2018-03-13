@@ -72,7 +72,9 @@ void AR1::calculate_logl()
 
         double model_psd, data_pgram, w;
         double alpha = exp(-1.0/L);
+        double alpha_sq = alpha*alpha;
         double sigma = beta/sqrt(1.0 - alpha*alpha);
+        double sigma_sq = sigma*sigma;
 
         // Loop over first half of fft
         for(size_t j=1; j<=(size_t)floor(0.5*(N-1)); ++j)
@@ -81,8 +83,8 @@ void AR1::calculate_logl()
             w = 2.0*M_PI*static_cast<double>(j)/N;
 
             // Model PSD
-            model_psd = 2.0*sigma*sigma*L
-                            /(L*L*w*w + 1.0);
+            model_psd = sigma_sq*(1.0 - alpha_sq)
+                            / (1.0 + alpha_sq - 2.0*alpha*cos(w)); 
 
             // Data periodogram
             data_pgram = (pow(y_fft[j].real(), 2)

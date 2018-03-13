@@ -1,4 +1,5 @@
 // Includes
+#include <ctime>
 #include <iostream>
 #include "Models.h"
 #include "RNG.h"
@@ -9,14 +10,14 @@ using namespace WhittledAway;
 int main()
 {
     // What example are we using? The class and the distance function.
-    using TheModel = Oscillation;
+    using TheModel = AR1;
 
     // Make sure TheModel is derived from WhittledAway::Model
     static_assert(std::is_base_of<Model, TheModel>::value,
                     "Examples must derive from WhittledAway::Model.");
 
     // Create random number generator
-    InfoNest::RNG rng(1);
+    InfoNest::RNG rng(time(0));
 
     // Make a particle
     TheModel o1;
