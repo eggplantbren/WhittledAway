@@ -311,5 +311,36 @@ van Erp, H. R., Ronald O. Linger, and Pieter HAJM van Gelder. ``Inquiry Calculus
 
 \end{thebibliography}
 
+\appendix
+\section{Notes}
+
+The discrete AR(1) process has covariance function
+\begin{align}
+C(\tau) &= \sigma^2 \exp\left(-|\tau| / L\right) \\
+        &= \sigma^2 \alpha^{|\tau|},
+\end{align}
+where $\tau$ is the {\em integer} lag.
+The power spectral density is therefore
+\begin{align}
+S(\omega) &= \sum_{\tau=-\infty}^{\infty} C(\tau)\exp(-i \omega \tau) \\
+          &= \sum_{\tau=-\infty}^{\infty} \sigma^2 \alpha^{|\tau|}
+                                         \exp(-i \omega \tau) \\
+          &= \sigma^2 \left(
+                \sum_{\tau=-\infty}^{-1} \alpha^{-\tau}\exp(-i \omega \tau) + 
+                \sum_{\tau=0}^{\infty} \alpha^{\tau}\exp(-i \omega \tau)
+                        \right) \\
+          &= \sigma^2 \left(
+                \frac{\alpha e^{i\omega}}
+                     {1 - \alpha e^{i\omega}}
+                 +
+                \frac{1}
+                     {1 - \alpha e^{-i\omega}}
+                        \right) \\
+         &= \sigma^2
+                \frac{1 - \alpha^2}
+                     {1 + \alpha^2 - 2\alpha\cos(\omega)}
+\end{align}
+
+
 \end{document}
 
