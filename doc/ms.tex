@@ -99,6 +99,18 @@ $I(\omega_k; \boldsymbol{y})$ whose expectation is given by the
 model power spectrum (i.e., the power spectral density)
 $S(\omega_k; \boldsymbol{\theta})$.
 
+If the {\em discrete} covariance function, defined for {\em integer} lag
+$\tau$, is $C(\tau)$
+then the PSD is a {\em continuous} function of angular frequency
+$\omega \in (-\pi, \pi]$,
+defined as
+\begin{align}
+S(\omega) &= \sum_\tau C(\tau)\exp\left(-i \omega \tau\right).
+\end{align}
+Since $C$ is necessarily an even function of $\tau$, the imaginary part of
+$S(\omega)$ will be zero. In the Whittle likelihood, $S(\omega)$ is then
+evaluated at a discrete set of points.
+
 In astronomy, time series analysis of variable sources has often been performed
 in the frequency domain \citep[e.g.][]{lomb, hatzes, helio}. However,
 a number of researchers have applied existing time series models from
