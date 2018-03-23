@@ -1,5 +1,5 @@
 CC = g++
-CCFLAGS = -std=c++17 -march=native -O3 -Wall -Wextra -pedantic -I InfoNest/cpp -I include -I celerite/cpp/include -DWITH_LAPACK
+CCFLAGS = -std=c++17 -O3 -march=native -DNDEBUG -Wall -Wextra -pedantic -I InfoNest/cpp -I include -I celerite/cpp/include -DWITH_LAPACK
 
 default: infonest objects binaries
 
