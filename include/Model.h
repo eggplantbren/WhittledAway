@@ -17,7 +17,7 @@ class Model
     protected:
 
         // Number of data points
-        static constexpr size_t N = 100;
+        static constexpr size_t N = 1000;
 
         // Whittle likelihood?
         static constexpr bool whittle = false;
