@@ -6,7 +6,6 @@ namespace WhittledAway
 Model::Model()
 :y(N)
 ,y_fft(N)
-,C(N, N)
 {
 
 }
