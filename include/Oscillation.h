@@ -33,6 +33,9 @@ class Oscillation : public Model
 
     public:
 
+        // Constructor needs to make C of the right size
+        Oscillation();
+
         // Generate from the distribution
         void generate(InfoNest::RNG& rng);
 

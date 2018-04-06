@@ -9,6 +9,11 @@
 namespace WhittledAway
 {
 
+Oscillation::Oscillation()
+{
+    C.resize(N, N);
+}
+
 void Oscillation::generate(InfoNest::RNG& rng)
 {
     A = exp(rng.randn());
